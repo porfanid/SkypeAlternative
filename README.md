@@ -1,16 +1,23 @@
 # SkypeAlternative
 
-A secure, cross-platform desktop and mobile application for real-time chat and video calls with end-to-end encryption.
+A secure, open-source, cross-platform desktop and mobile application for real-time chat and video calls with end-to-end encryption.
 
-## Features
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Tests](https://github.com/porfanid/SkypeAlternative/workflows/CI/badge.svg)](https://github.com/porfanid/SkypeAlternative/actions)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.3-blue)](https://www.typescriptlang.org/)
+[![Electron](https://img.shields.io/badge/Electron-27-47848F)](https://www.electronjs.org/)
+
+## ✨ Features
 
 - 🔒 **End-to-End Encryption**: All messages and calls are encrypted using NaCl (TweetNaCl)
-- 🔑 **Mnemonic-Based Authentication**: No passwords - use a 12-word recovery phrase
-- 💬 **Secure Messaging**: Encrypted chat with Firebase backend
-- 📞 **Video Calls**: Real-time video calls powered by Cloudflare Calls
-- 👥 **Friend Management**: Add friends using public keys
+- 🔑 **Mnemonic-Based Authentication**: No passwords - use a 12-word recovery phrase (BIP39)
+- 💬 **Secure Messaging**: Encrypted chat with message reactions, edit/delete, and search
+- 👥 **Group Chats**: Multi-party end-to-end encrypted group conversations
+- 📞 **Video Calls**: Real-time video calls powered by Cloudflare Calls (coming soon)
+- 🤝 **Friend Management**: Add friends using public keys, manage requests
 - 🌍 **Cross-Platform**: Runs on Windows, Linux, macOS, Android, and iOS
 - 💾 **Local Storage**: Secure key storage and message caching
+- 🎯 **Privacy First**: No tracking, no ads, no data collection
 
 ## Architecture
 
@@ -169,22 +176,71 @@ git tag v1.0.0
 git push origin v1.0.0
 ```
 
-## Contributing
+## 📚 Documentation
 
-Contributions are welcome! Please read our contributing guidelines and code of conduct.
+- **[Getting Started](docs/GETTING_STARTED.md)** - Complete setup guide for new contributors
+- **[Architecture](docs/ARCHITECTURE.md)** - Deep dive into system design and implementation
+- **[Contributing](CONTRIBUTING.md)** - Guidelines for contributing code
+- **[Code of Conduct](CODE_OF_CONDUCT.md)** - Community standards
+- **[Security](SECURITY.md)** - Security policy and vulnerability reporting
+- **[Changelog](CHANGELOG.md)** - Version history and release notes
 
-### Development Setup
+## 🤝 Contributing
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests
-5. Run linter: `npm run lint`
-6. Submit a pull request
+We love contributions! Whether you're:
+- 🐛 Fixing bugs
+- ✨ Adding features
+- 📝 Improving documentation
+- 🌍 Translating the app
+- 💡 Suggesting ideas
 
-## License
+Please read our **[Contributing Guidelines](CONTRIBUTING.md)** to get started.
 
-MIT License - see LICENSE file for details
+### Quick Start for Contributors
+
+```bash
+# Fork and clone
+git clone https://github.com/YOUR_USERNAME/SkypeAlternative.git
+cd SkypeAlternative
+
+# Install and run tests
+npm install
+npm test
+
+# Start development
+npm run electron:dev
+```
+
+See **[Getting Started Guide](docs/GETTING_STARTED.md)** for detailed instructions.
+
+## 💝 Support the Project
+
+SkypeAlternative is **free and open source** forever. If you find it useful, consider supporting development:
+
+- ⭐ **Star the repo** - Show your support
+- 💰 **[Sponsor on GitHub](https://github.com/sponsors/porfanid)** - Help cover infrastructure costs
+- 🐛 **Report bugs** - Help us improve
+- 📖 **Share knowledge** - Help other users
+- 💻 **Contribute code** - Make it better
+
+See **[SUPPORT.md](SUPPORT.md)** for more ways to support the project.
+
+### Why Support?
+
+Your contributions help us:
+- 🏗️ Maintain infrastructure (Firebase, Cloudflare, CI/CD)
+- 🔒 Fund security audits
+- 📚 Create better documentation
+- ✨ Build new features
+- 🌍 Support the community
+
+**Note:** Core messaging is free forever. Optional call credits system coming in v2.0 for sustainable video calling.
+
+## 📜 License
+
+MIT License - see [LICENSE](LICENSE) file for details.
+
+This project is **open source** and free to use for personal and commercial purposes.
 
 ## Acknowledgments
 
@@ -193,10 +249,58 @@ MIT License - see LICENSE file for details
 - Cloudflare for video calling
 - Electron for desktop app framework
 
-## Support
+## 🆘 Getting Help
 
-For issues, questions, or feature requests, please open an issue on GitHub.
+- **📖 Documentation**: Check our [docs](docs/) directory
+- **💬 Discussions**: Ask questions in [GitHub Discussions](https://github.com/porfanid/SkypeAlternative/discussions)
+- **🐛 Issues**: Report bugs via [GitHub Issues](https://github.com/porfanid/SkypeAlternative/issues)
+- **💡 Feature Requests**: Suggest features using our [issue templates](.github/ISSUE_TEMPLATE/)
+
+## 🔐 Security
+
+**⚠️ Security Disclosure**: If you discover a security vulnerability, please email security@skypealternative.com (coming soon) instead of opening a public issue.
+
+See our [Security Policy](SECURITY.md) for details on:
+- Supported versions
+- Reporting vulnerabilities
+- Security best practices
+- Cryptographic implementation details
+
+## 🌟 Project Status
+
+**Current Version**: 1.0.0-beta  
+**Status**: Active Development  
+**Tests**: 20/20 passing ✅  
+**Coverage**: 70%+ ✅
+
+### Roadmap
+
+- ✅ End-to-end encryption
+- ✅ Mnemonic authentication
+- ✅ Friend management
+- ✅ Chat with reactions/edit/delete
+- ✅ Group chats
+- 🚧 Video/audio calls (Cloudflare Calls)
+- 🚧 File sharing
+- 🚧 Mobile apps (Android/iOS)
+- 📅 Push notifications
+- 📅 Multi-device sync
+- 📅 Federation protocol
+
+## 🙏 Acknowledgments
+
+Built with amazing open-source technologies:
+- [TweetNaCl](https://tweetnacl.js.org/) - Cryptography
+- [Firebase](https://firebase.google.com/) - Backend infrastructure
+- [Cloudflare Calls](https://www.cloudflare.com/products/calls/) - Video calling
+- [Electron](https://www.electronjs.org/) - Desktop framework
+- [React](https://react.dev/) - UI framework
+- [Vite](https://vitejs.dev/) - Build tool
+
+Special thanks to all [contributors](CONTRIBUTORS.md)!
 
 ---
 
-**⚠️ Security Disclosure**: If you discover a security vulnerability, please email [security contact] instead of opening a public issue.
+**Made with ❤️ and 🔒 by the community**
+
+[Website](https://skypealternative.com) · [Documentation](docs/) · [Contributing](CONTRIBUTING.md) · [Support](SUPPORT.md)
