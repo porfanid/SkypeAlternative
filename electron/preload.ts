@@ -7,20 +7,20 @@ contextBridge.exposeInMainWorld('electron', {
     setItem: async (key: string, value: string): Promise<void> => {
       const result = await ipcRenderer.invoke('secure-storage:set', key, value);
       if (!result.success) {
-        throw new Error(result.error);
+        throw new Error('Storage operation failed');
       }
     },
     getItem: async (key: string): Promise<string | null> => {
       const result = await ipcRenderer.invoke('secure-storage:get', key);
       if (!result.success) {
-        throw new Error(result.error);
+        throw new Error('Storage retrieval failed');
       }
       return result.data;
     },
     removeItem: async (key: string): Promise<void> => {
       const result = await ipcRenderer.invoke('secure-storage:remove', key);
       if (!result.success) {
-        throw new Error(result.error);
+        throw new Error('Storage removal failed');
       }
     },
   },

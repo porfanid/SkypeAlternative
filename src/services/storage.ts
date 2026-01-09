@@ -1,4 +1,4 @@
-import { StoredKeyPair } from '@models/index';
+import { StoredKeyPair, Message, User } from '@models/index';
 
 /**
  * Storage service for managing secure local storage
@@ -79,7 +79,7 @@ class StorageService {
   /**
    * Store cached messages
    */
-  async storeMessages(messages: any[]): Promise<void> {
+  async storeMessages(messages: Message[]): Promise<void> {
     const data = JSON.stringify(messages);
     
     if (this.isElectronAvailable() && window.electron) {
@@ -92,7 +92,7 @@ class StorageService {
   /**
    * Retrieve cached messages
    */
-  async getMessages(): Promise<any[]> {
+  async getMessages(): Promise<Message[]> {
     try {
       let data: string | null;
       
@@ -112,7 +112,7 @@ class StorageService {
   /**
    * Store user data
    */
-  async storeUserData(userData: any): Promise<void> {
+  async storeUserData(userData: User): Promise<void> {
     const data = JSON.stringify(userData);
     
     if (this.isElectronAvailable() && window.electron) {
@@ -125,7 +125,7 @@ class StorageService {
   /**
    * Retrieve user data
    */
-  async getUserData(): Promise<any | null> {
+  async getUserData(): Promise<User | null> {
     try {
       let data: string | null;
       
