@@ -15,8 +15,8 @@ const firebaseConfig = {
 class FirebaseService {
   private static instance: FirebaseService;
   private app: FirebaseApp;
-  private db: Firestore;
-  private auth: Auth;
+  private _db: Firestore;
+  private _auth: Auth;
   private initialized: boolean = false;
 
   private constructor() {
@@ -27,8 +27,8 @@ class FirebaseService {
     }
 
     this.app = initializeApp(firebaseConfig);
-    this.db = getFirestore(this.app);
-    this.auth = getAuth(this.app);
+    this._db = getFirestore(this.app);
+    this._auth = getAuth(this.app);
     this.initialized = true;
   }
 
@@ -48,14 +48,21 @@ class FirebaseService {
     if (!this.initialized) {
       throw new Error('Firebase not initialized');
     }
-    return this.db;
+    return this._db;
   }
 
   getAuth(): Auth {
     if (!this.initialized) {
       throw new Error('Firebase not initialized');
     }
-    return this.auth;
+    return this._auth;
+  }
+
+  getApp(): FirebaseApp {
+    if (!this.initialized) {
+      throw new Error('Firebase not initialized');
+    }
+    return this.app;
   }
 
   isInitialized(): boolean {
@@ -72,5 +79,27 @@ export const getFirebaseService = (): FirebaseService => {
   }
   return firebaseService;
 };
+
+// Lazy-loaded exports for convenience
+// These will only initialize Firebase when first accessed
+let _dbInstance: Firestore | null = null;
+let _authInstance: Auth | null = null;
+
+export const getDb = (): Firestore => {
+  if (!_dbInstance) {
+    _dbInstance = getFirebaseService().getFirestore();
+  }
+  return _dbInstance;
+};
+
+export const getAuthInstance = (): Auth => {
+  if (!_authInstance) {
+    _authInstance = getFirebaseService().getAuth();
+  }
+  return _authInstance;
+};
+
+// For backward compatibility - use getDb() instead
+export { getDb as db, getAuthInstance as auth };
 
 export default getFirebaseService;

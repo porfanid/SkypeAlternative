@@ -8,7 +8,7 @@
  * - Call state management
  */
 
-import { db } from './firebase';
+import { getDb } from './firebase';
 import { collection, doc, setDoc, getDoc, updateDoc, onSnapshot, deleteDoc, Timestamp } from 'firebase/firestore';
 import { encryptMessage, decryptMessage } from '../utils/crypto';
 
@@ -72,7 +72,7 @@ class CallService {
       });
 
       // Create call document in Firebase
-      const callRef = doc(db, 'calls', callId);
+      const callRef = doc(getDb(), 'calls', callId);
       await setDoc(callRef, {
         callId,
         initiatorId,
@@ -152,7 +152,7 @@ class CallService {
       });
 
       // Update call status
-      const callRef = doc(db, 'calls', callId);
+      const callRef = doc(getDb(), 'calls', callId);
       await updateDoc(callRef, {
         status: 'in-progress',
         answerTime: Timestamp.now()
@@ -170,7 +170,7 @@ class CallService {
       // Handle ICE candidates
       this.peerConnection.onicecandidate = (event) => {
         if (event.candidate) {
-          const callDoc = doc(db, 'calls', callId);
+          const callDoc = doc(getDb(), 'calls', callId);
           getDoc(callDoc).then(docSnap => {
             if (docSnap.exists()) {
               const initiatorId = docSnap.data().initiatorId;
@@ -192,7 +192,7 @@ class CallService {
       };
 
       // Get the offer from signals
-      const signalsRef = collection(db, 'calls', callId, 'signals');
+      const signalsRef = collection(getDb(), 'calls', callId, 'signals');
       const offerSnapshot = await getDoc(doc(signalsRef, 'offer'));
       
       if (offerSnapshot.exists()) {
@@ -235,7 +235,7 @@ class CallService {
    */
   async rejectCall(callId: string): Promise<void> {
     try {
-      const callRef = doc(db, 'calls', callId);
+      const callRef = doc(getDb(), 'calls', callId);
       await updateDoc(callRef, {
         status: 'rejected',
         endTime: Timestamp.now()
@@ -251,7 +251,7 @@ class CallService {
    */
   async endCall(callId: string): Promise<void> {
     try {
-      const callRef = doc(db, 'calls', callId);
+      const callRef = doc(getDb(), 'calls', callId);
       const callDoc = await getDoc(callRef);
       
       if (callDoc.exists()) {
@@ -318,7 +318,7 @@ class CallService {
     userId: string,
     callback: (call: CallState) => void
   ): () => void {
-    const callsRef = collection(db, 'calls');
+    const callsRef = collection(getDb(), 'calls');
     
     const unsubscribe = onSnapshot(callsRef, (snapshot) => {
       snapshot.docChanges().forEach((change) => {
@@ -359,7 +359,7 @@ class CallService {
         senderPrivateKey
       );
 
-      const signalRef = doc(db, 'calls', callId, 'signals', signal.type);
+      const signalRef = doc(getDb(), 'calls', callId, 'signals', signal.type);
       await setDoc(signalRef, {
         type: signal.type,
         data: encryptedData,
@@ -381,7 +381,7 @@ class CallService {
     userPrivateKey: string,
     peerPublicKey: string
   ): void {
-    const signalsRef = collection(db, 'calls', callId, 'signals');
+    const signalsRef = collection(getDb(), 'calls', callId, 'signals');
     
     this.signalUnsubscribe = onSnapshot(signalsRef, (snapshot) => {
       snapshot.docChanges().forEach(async (change) => {

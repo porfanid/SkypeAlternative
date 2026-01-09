@@ -9,7 +9,7 @@
  * - File preview generation
  */
 
-import { db } from './firebase';
+import { getDb } from './firebase';
 import { collection, doc, setDoc, getDoc, updateDoc, onSnapshot, query, where, Timestamp } from 'firebase/firestore';
 import { encryptMessage, decryptMessage } from '../utils/crypto';
 
@@ -103,7 +103,7 @@ class FileService {
       }
 
       // Store metadata in Firestore
-      await setDoc(doc(db, 'files', fileId), {
+      await setDoc(doc(getDb(), 'files', fileId), {
         ...metadata,
         uploadedAt: Timestamp.now(),
         expiresAt: expiresAt ? Timestamp.fromMillis(expiresAt) : null
@@ -140,7 +140,7 @@ class FileService {
   ): Promise<Blob> {
     try {
       // Get file metadata
-      const metadataDoc = await getDoc(doc(db, 'files', fileId));
+      const metadataDoc = await getDoc(doc(getDb(), 'files', fileId));
       
       if (!metadataDoc.exists()) {
         throw new Error('File not found');
@@ -168,7 +168,7 @@ class FileService {
       const decryptedData = await this.decryptFileData(encryptedData, fileKey);
 
       // Increment download count
-      await updateDoc(doc(db, 'files', fileId), {
+      await updateDoc(doc(getDb(), 'files', fileId), {
         downloadCount: metadata.downloadCount + 1
       });
 
@@ -185,7 +185,7 @@ class FileService {
    */
   async getFileMetadata(fileId: string): Promise<FileMetadata | null> {
     try {
-      const metadataDoc = await getDoc(doc(db, 'files', fileId));
+      const metadataDoc = await getDoc(doc(getDb(), 'files', fileId));
       
       if (!metadataDoc.exists()) {
         return null;
@@ -223,7 +223,7 @@ class FileService {
       await this.deleteStoredFile(fileId);
 
       // Delete metadata
-      await updateDoc(doc(db, 'files', fileId), {
+      await updateDoc(doc(getDb(), 'files', fileId), {
         deletedAt: Timestamp.now()
       });
     } catch (error) {
@@ -240,7 +240,7 @@ class FileService {
     friendId: string,
     callback: (files: FileMetadata[]) => void
   ): () => void {
-    const filesRef = collection(db, 'files');
+    const filesRef = collection(getDb(), 'files');
     const q = query(
       filesRef,
       where('senderId', 'in', [userId, friendId]),

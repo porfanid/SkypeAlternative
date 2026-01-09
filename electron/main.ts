@@ -2,6 +2,22 @@ import { app, BrowserWindow, ipcMain, safeStorage } from 'electron';
 import path from 'path';
 import Store from 'electron-store';
 
+// Suppress Linux-specific warnings
+if (process.platform === 'linux') {
+  // Disable hardware acceleration to avoid GPU warnings
+  app.disableHardwareAcceleration();
+  
+  // Suppress IBUS warnings
+  process.env['IBUS_DISABLE_SNOOPER'] = '1';
+  
+  // Suppress other warnings
+  app.commandLine.appendSwitch('disable-gpu');
+  app.commandLine.appendSwitch('disable-software-rasterizer');
+}
+
+// Suppress security warnings in development
+process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
+
 const store = new Store();
 const isDev = process.env.NODE_ENV === 'development';
 
