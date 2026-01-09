@@ -26,6 +26,29 @@
   gap: 12px;
 }
 
+.chat-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.call-btn {
+  background: rgba(0, 175, 244, 0.1);
+  border: 1px solid rgba(0, 175, 244, 0.3);
+  color: #00aff4;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 18px;
+  transition: all 0.2s ease;
+}
+
+.call-btn:hover {
+  background: rgba(0, 175, 244, 0.2);
+  border-color: #00aff4;
+  transform: scale(1.05);
+}
+
 .search-input {
   padding: 8px 12px;
   border: 1px solid #2a3a4a;

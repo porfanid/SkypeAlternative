@@ -10,9 +10,15 @@ interface ChatWindowProps {
   friend: Friend;
   currentUserId: string;
   onClose: () => void;
+  onStartCall?: (videoEnabled: boolean) => void;
 }
 
-export const ChatWindow: React.FC<ChatWindowProps> = ({ friend, currentUserId, onClose }) => {
+export const ChatWindow: React.FC<ChatWindowProps> = ({ 
+  friend, 
+  currentUserId, 
+  onClose,
+  onStartCall 
+}) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState('');
   const [isLoading, setIsLoading] = useState(true);
@@ -164,6 +170,24 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({ friend, currentUserId, o
           </div>
         </div>
         <div className="chat-header-actions">
+          {onStartCall && (
+            <>
+              <button
+                className="call-btn"
+                onClick={() => onStartCall(false)}
+                title="Voice call"
+              >
+                📞
+              </button>
+              <button
+                className="call-btn"
+                onClick={() => onStartCall(true)}
+                title="Video call"
+              >
+                📹
+              </button>
+            </>
+          )}
           <input
             type="text"
             className="search-input"
