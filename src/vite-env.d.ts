@@ -14,3 +14,8 @@ interface ImportMetaEnv {
 interface ImportMeta {
   readonly env: ImportMetaEnv
 }
+
+// Global type declarations
+interface Window {
+  Buffer: typeof import('buffer').Buffer;
+}

@@ -81,7 +81,7 @@ class FileService {
       const expiresAt = options?.expiresIn ? Date.now() + options.expiresIn : undefined;
       
       // Encrypt the file key with recipient's public key
-      const encryptedKey = encryptMessage(fileKey, recipientPublicKey, senderPrivateKey);
+      const encryptedKeyObj = encryptMessage(fileKey, recipientPublicKey, senderPrivateKey);
 
       const metadata: FileMetadata = {
         fileId,
@@ -94,7 +94,7 @@ class FileService {
         expiresAt,
         downloadCount: 0,
         maxDownloads: options?.maxDownloads,
-        encryptedKey
+        encryptedKey: JSON.stringify(encryptedKeyObj)
       };
 
       // Generate thumbnail if image
@@ -159,7 +159,8 @@ class FileService {
       }
 
       // Decrypt file key
-      const fileKey = decryptMessage(metadata.encryptedKey, recipientPrivateKey, senderPublicKey);
+      const encryptedKeyObj = JSON.parse(metadata.encryptedKey);
+      const fileKey = decryptMessage(encryptedKeyObj, recipientPrivateKey, senderPublicKey);
 
       // Download encrypted file
       const encryptedData = await this.retrieveEncryptedFile(fileId);
@@ -365,8 +366,18 @@ class FileService {
     const db = await this.openIndexedDB();
     const transaction = db.transaction(['files'], 'readonly');
     const store = transaction.objectStore('files');
-    const result = await store.get(fileId);
-    return result?.data;
+    const request = store.get(fileId);
+    
+    return new Promise((resolve, reject) => {
+      request.onsuccess = () => {
+        if (request.result && request.result.data) {
+          resolve(request.result.data);
+        } else {
+          reject(new Error('File not found in local storage'));
+        }
+      };
+      request.onerror = () => reject(request.error);
+    });
   }
 
   /**

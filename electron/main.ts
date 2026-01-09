@@ -4,15 +4,15 @@ import Store from 'electron-store';
 
 // Suppress Linux-specific warnings
 if (process.platform === 'linux') {
-  // Disable hardware acceleration to avoid GPU warnings
-  app.disableHardwareAcceleration();
+  // Disable IBus integration completely to avoid warnings
+  // This still allows text input through X11/Wayland input methods
+  process.env['IBUS_ENABLE_SYNC_MODE'] = '0';
+  process.env['IBUS_USE_PORTAL'] = '0';
   
-  // Suppress IBUS warnings
-  process.env['IBUS_DISABLE_SNOOPER'] = '1';
-  
-  // Suppress other warnings
-  app.commandLine.appendSwitch('disable-gpu');
-  app.commandLine.appendSwitch('disable-software-rasterizer');
+  // Suppress GPU-related warnings (these are harmless in development)
+  app.commandLine.appendSwitch('--disable-gpu-sandbox');
+  app.commandLine.appendSwitch('--disable-dev-shm-usage');
+  app.commandLine.appendSwitch('--no-sandbox');
 }
 
 // Suppress security warnings in development

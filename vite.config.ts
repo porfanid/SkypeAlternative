@@ -29,7 +29,20 @@ export default defineConfig({
       '@utils': path.resolve(__dirname, './src/utils'),
       '@models': path.resolve(__dirname, './src/models'),
       '@hooks': path.resolve(__dirname, './src/hooks'),
+      // Add Buffer polyfill for browser
+      'buffer': 'buffer/',
     },
+  },
+  define: {
+    // Make Buffer available globally
+    'global': 'globalThis',
+  },
+  optimizeDeps: {
+    esbuildOptions: {
+      define: {
+        global: 'globalThis'
+      }
+    }
   },
   server: {
     port: 5173,

@@ -185,6 +185,7 @@ const MainApp: React.FC<MainAppProps> = ({ user, onLogout }) => {
             {activeTab === 'friends' && (
               <FriendList
                 currentUserId={user.id}
+                currentUserPublicKey={user.publicKey}
                 onSelectFriend={handleSelectFriend}
               />
             )}

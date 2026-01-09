@@ -70,6 +70,7 @@
   "dependencies": {
     "@cloudflare/stream-react": "^1.9.1",
     "bip39": "^3.1.0",
+    "buffer": "^6.0.3",
     "electron-store": "^8.1.0",
     "firebase": "^10.7.1",
     "react": "^18.2.0",

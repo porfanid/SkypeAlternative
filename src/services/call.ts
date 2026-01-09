@@ -443,8 +443,8 @@ class CallService {
   private async getCurrentUserId(): Promise<string> {
     // Implementation depends on auth service
     // For now, return from storage
-    const { StorageService } = await import('./storage');
-    const userId = await StorageService.getItem('userId');
+    const storageService = (await import('./storage')).default;
+    const userId = await storageService.getItem('userId');
     if (!userId) {
       throw new Error('User not authenticated');
     }

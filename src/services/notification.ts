@@ -59,11 +59,9 @@ class NotificationService {
     await this.showNotification('Incoming Call', {
       body: `${callerName} is calling you...`,
       tag: 'incoming-call',
-      requireInteraction: true,
-      actions: [
-        { action: 'answer', title: 'Answer' },
-        { action: 'reject', title: 'Reject' }
-      ]
+      requireInteraction: true
+      // Note: actions are not supported in standard Notification API
+      // Use notification click to answer
     });
 
     // Play ringtone

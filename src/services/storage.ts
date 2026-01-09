@@ -156,6 +156,44 @@ class StorageService {
       localStorage.removeItem(this.USER_DATA_KEY);
     }
   }
+
+  /**
+   * Generic get item from storage
+   */
+  async getItem(key: string): Promise<string | null> {
+    try {
+      if (this.isElectronAvailable() && window.electron) {
+        return await window.electron.safeStorage.getItem(key);
+      } else {
+        return localStorage.getItem(key);
+      }
+    } catch (error) {
+      console.error(`Error retrieving item ${key}:`, error);
+      return null;
+    }
+  }
+
+  /**
+   * Generic set item in storage
+   */
+  async setItem(key: string, value: string): Promise<void> {
+    if (this.isElectronAvailable() && window.electron) {
+      await window.electron.safeStorage.setItem(key, value);
+    } else {
+      localStorage.setItem(key, value);
+    }
+  }
+
+  /**
+   * Generic remove item from storage
+   */
+  async removeItem(key: string): Promise<void> {
+    if (this.isElectronAvailable() && window.electron) {
+      await window.electron.safeStorage.removeItem(key);
+    } else {
+      localStorage.removeItem(key);
+    }
+  }
 }
 
 export default StorageService.getInstance();
