@@ -12,7 +12,7 @@ import {
 } from 'firebase/firestore';
 import { getFirebaseService } from './firebase';
 import { encryptMessage, decryptMessage } from '@utils/crypto';
-import { Message } from '@types/index';
+import { Message } from '@models/index';
 import storageService from './storage';
 
 class MessageService {

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import authService from '@services/auth';
 import storageService from '@services/storage';
 import { deriveKeyPairFromMnemonic, validateMnemonic } from '@utils/crypto';
-import { User } from '@types/index';
+import { User } from '@models/index';
 import './LoginScreen.css';
 
 interface LoginScreenProps {

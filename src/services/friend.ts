@@ -10,7 +10,7 @@ import {
   Timestamp,
 } from 'firebase/firestore';
 import { getFirebaseService } from './firebase';
-import { Friend, FriendRequest } from '@types/index';
+import { Friend, FriendRequest } from '@models/index';
 import authService from './auth';
 
 class FriendService {

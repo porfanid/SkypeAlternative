@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import authService from '@services/auth';
 import storageService from '@services/storage';
 import { generateMnemonic, deriveKeyPairFromMnemonic, validateMnemonic } from '@utils/crypto';
-import { User } from '@types/index';
+import { User } from '@models/index';
 import './RegisterScreen.css';
 
 interface RegisterScreenProps {

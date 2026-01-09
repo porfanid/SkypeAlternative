@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import authService from '@services/auth';
-import storageService from '@services/storage';
 import LoginScreen from '@screens/LoginScreen';
 import RegisterScreen from '@screens/RegisterScreen';
 import MainApp from '@screens/MainApp';
-import { User } from '@types/index';
+import { User } from '@models/index';
 import './App.css';
 
 function App() {

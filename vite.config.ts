@@ -27,7 +27,7 @@ export default defineConfig({
       '@screens': path.resolve(__dirname, './src/screens'),
       '@services': path.resolve(__dirname, './src/services'),
       '@utils': path.resolve(__dirname, './src/utils'),
-      '@types': path.resolve(__dirname, './src/types'),
+      '@models': path.resolve(__dirname, './src/models'),
       '@hooks': path.resolve(__dirname, './src/hooks'),
     },
   },

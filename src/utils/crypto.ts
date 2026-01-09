@@ -1,7 +1,7 @@
 import * as bip39 from 'bip39';
 import * as nacl from 'tweetnacl';
 import * as naclUtil from 'tweetnacl-util';
-import { KeyPair, EncryptedMessage } from '@types/index';
+import { KeyPair, EncryptedMessage } from '@models/index';
 
 const { encodeBase64, decodeBase64, encodeUTF8, decodeUTF8 } = naclUtil;
 

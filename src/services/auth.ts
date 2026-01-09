@@ -12,7 +12,7 @@ import {
 } from 'firebase/firestore';
 import { getFirebaseService } from './firebase';
 import { signMessage, verifySignature, hashMessage } from '@utils/crypto';
-import { User, AuthChallenge, AuthResponse } from '@types/index';
+import { User, AuthChallenge, AuthResponse } from '@models/index';
 import storageService from './storage';
 
 class AuthService {

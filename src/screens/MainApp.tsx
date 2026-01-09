@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { User } from '@types/index';
+import { User } from '@models/index';
 import './MainApp.css';
 
 interface MainAppProps {

@@ -1,4 +1,4 @@
-import { StoredKeyPair } from '@types/index';
+import { StoredKeyPair } from '@models/index';
 
 /**
  * Storage service for managing secure local storage
@@ -23,9 +23,10 @@ class StorageService {
    * Check if Electron safeStorage is available
    */
   private isElectronAvailable(): boolean {
-    return typeof window !== 'undefined' && 
-           'electron' in window && 
-           window.electron?.safeStorage;
+    return !!(
+      typeof window !== 'undefined' &&
+      window.electron?.safeStorage
+    );
   }
 
   /**
@@ -34,7 +35,7 @@ class StorageService {
   async storeKeyPair(keyPair: StoredKeyPair): Promise<void> {
     const data = JSON.stringify(keyPair);
     
-    if (this.isElectronAvailable()) {
+    if (this.isElectronAvailable() && window.electron) {
       // Use Electron's secure storage
       await window.electron.safeStorage.setItem(this.KEYS_STORAGE_KEY, data);
     } else {
@@ -51,7 +52,7 @@ class StorageService {
     try {
       let data: string | null;
       
-      if (this.isElectronAvailable()) {
+      if (this.isElectronAvailable() && window.electron) {
         data = await window.electron.safeStorage.getItem(this.KEYS_STORAGE_KEY);
       } else {
         data = localStorage.getItem(this.KEYS_STORAGE_KEY);
@@ -68,7 +69,7 @@ class StorageService {
    * Delete stored key pair (logout)
    */
   async deleteKeyPair(): Promise<void> {
-    if (this.isElectronAvailable()) {
+    if (this.isElectronAvailable() && window.electron) {
       await window.electron.safeStorage.removeItem(this.KEYS_STORAGE_KEY);
     } else {
       localStorage.removeItem(this.KEYS_STORAGE_KEY);
@@ -81,7 +82,7 @@ class StorageService {
   async storeMessages(messages: any[]): Promise<void> {
     const data = JSON.stringify(messages);
     
-    if (this.isElectronAvailable()) {
+    if (this.isElectronAvailable() && window.electron) {
       await window.electron.safeStorage.setItem(this.MESSAGES_STORAGE_KEY, data);
     } else {
       localStorage.setItem(this.MESSAGES_STORAGE_KEY, data);
@@ -95,7 +96,7 @@ class StorageService {
     try {
       let data: string | null;
       
-      if (this.isElectronAvailable()) {
+      if (this.isElectronAvailable() && window.electron) {
         data = await window.electron.safeStorage.getItem(this.MESSAGES_STORAGE_KEY);
       } else {
         data = localStorage.getItem(this.MESSAGES_STORAGE_KEY);
@@ -114,7 +115,7 @@ class StorageService {
   async storeUserData(userData: any): Promise<void> {
     const data = JSON.stringify(userData);
     
-    if (this.isElectronAvailable()) {
+    if (this.isElectronAvailable() && window.electron) {
       await window.electron.safeStorage.setItem(this.USER_DATA_KEY, data);
     } else {
       localStorage.setItem(this.USER_DATA_KEY, data);
@@ -128,7 +129,7 @@ class StorageService {
     try {
       let data: string | null;
       
-      if (this.isElectronAvailable()) {
+      if (this.isElectronAvailable() && window.electron) {
         data = await window.electron.safeStorage.getItem(this.USER_DATA_KEY);
       } else {
         data = localStorage.getItem(this.USER_DATA_KEY);
@@ -147,7 +148,7 @@ class StorageService {
   async clearAll(): Promise<void> {
     await this.deleteKeyPair();
     
-    if (this.isElectronAvailable()) {
+    if (this.isElectronAvailable() && window.electron) {
       await window.electron.safeStorage.removeItem(this.MESSAGES_STORAGE_KEY);
       await window.electron.safeStorage.removeItem(this.USER_DATA_KEY);
     } else {
