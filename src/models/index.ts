@@ -29,6 +29,36 @@ export interface Message {
   encryptedContent: string;
   timestamp: number;
   status: 'sending' | 'sent' | 'delivered' | 'read';
+  // Enhanced features
+  editedAt?: number;
+  deletedAt?: number;
+  expiresAt?: number; // For self-destructing messages
+  replyToMessageId?: string; // For threading
+  reactions?: MessageReaction[];
+  // Group chat support
+  groupId?: string;
+}
+
+export interface MessageReaction {
+  emoji: string;
+  userId: string;
+  timestamp: number;
+}
+
+export interface GroupChat {
+  id: string;
+  name: string;
+  creatorId: string;
+  memberIds: string[];
+  memberPublicKeys: { [userId: string]: string };
+  encryptedGroupKey: string; // Encrypted with each member's public key
+  createdAt: number;
+  lastActivity: number;
+}
+
+export interface GroupMessage extends Omit<Message, 'recipientId'> {
+  groupId: string;
+  encryptedForMembers: { [userId: string]: string }; // Content encrypted for each member
 }
 
 export interface CallSession {

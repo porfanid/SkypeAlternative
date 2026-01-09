@@ -3,7 +3,7 @@ import * as nacl from 'tweetnacl';
 import * as naclUtil from 'tweetnacl-util';
 import { KeyPair, EncryptedMessage } from '@models/index';
 
-const { encodeBase64, decodeBase64, encodeUTF8, decodeUTF8 } = naclUtil;
+const { encodeBase64, decodeBase64 } = naclUtil;
 
 /**
  * Generate a new mnemonic phrase (12 words)

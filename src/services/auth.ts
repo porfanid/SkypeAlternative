@@ -6,7 +6,6 @@ import {
   getDocs,
   query,
   where,
-  orderBy,
   limit,
   Timestamp,
 } from 'firebase/firestore';

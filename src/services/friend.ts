@@ -305,7 +305,7 @@ class FriendService {
    */
   private async getPendingRequest(
     fromUserId: string,
-    toUserId: string
+    _toUserId: string
   ): Promise<FriendRequest | null> {
     try {
       const firebase = getFirebaseService();
