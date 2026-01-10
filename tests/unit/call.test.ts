@@ -61,7 +61,16 @@ jest.mock('../../src/services/cloudflareCall', () => ({
       iceServers: [{ urls: 'stun:stun.cloudflare.com:3478' }]
     }),
     publishTrack: jest.fn().mockResolvedValue(undefined),
-    subscribeToTrack: jest.fn().mockResolvedValue(new MediaStream()),
+    subscribeToTrack: jest.fn().mockImplementation(() => {
+      // Create a mock MediaStream
+      const mockStream = {
+        getTracks: jest.fn(() => []),
+        getVideoTracks: jest.fn(() => []),
+        getAudioTracks: jest.fn(() => []),
+        addTrack: jest.fn()
+      };
+      return Promise.resolve(mockStream);
+    }),
     getLocalStream: jest.fn(() => null),
     getRemoteStream: jest.fn(() => null),
     getCurrentSessionId: jest.fn(() => 'mock-session-id'),
@@ -260,7 +269,11 @@ describe('Call Service with Cloudflare SFU', () => {
 
   describe('getRemoteStream', () => {
     it('should return remote stream from Cloudflare service', () => {
-      const mockStream = new MediaStream();
+      const mockStream = {
+        getTracks: jest.fn(() => []),
+        getVideoTracks: jest.fn(() => []),
+        getAudioTracks: jest.fn(() => [])
+      };
       (cloudflareCallsService.getRemoteStream as jest.Mock).mockReturnValue(mockStream);
 
       const stream = callService.getRemoteStream();

@@ -40,7 +40,7 @@ interface ErrorResponse {
 async function verifyFirebaseToken(
   idToken: string,
   projectId: string,
-  serviceAccountKey: string
+  _serviceAccountKey: string
 ): Promise<{ uid: string; email?: string } | null> {
   try {
     // In a real implementation, you would use Firebase Admin SDK
@@ -142,7 +142,7 @@ async function createCloudflareSession(
 /**
  * Handle CORS preflight
  */
-function handleOptions(request: Request): Response {
+function handleOptions(_request: Request): Response {
   const headers = {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Methods': 'POST, OPTIONS',

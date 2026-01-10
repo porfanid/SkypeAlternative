@@ -7,7 +7,7 @@
  * - Managing WebRTC connections through Cloudflare SFU
  */
 
-import { CloudflareSessionCredentials, CloudflareTrack } from '../models';
+import { CloudflareSessionCredentials } from '../models';
 import { getAuthInstance } from './firebase';
 
 export interface CloudflareCallsConfig {

@@ -132,7 +132,8 @@ class CallService {
         recipientPrivateKey,
         initiatorPublicKey
       );
-      const sessionData = JSON.parse(decryptedSession);
+      // Parse session data (currently unused, but available for future use)
+      // const sessionData = JSON.parse(decryptedSession);
 
       // Request own session credentials
       const credentials = await cloudflareCallsService.requestSessionCredentials(recipientId);
@@ -327,11 +328,12 @@ class CallService {
           
           if (signalData.to === userId) {
             try {
-              const decryptedData = decryptMessage(
-                signalData.data,
-                userPrivateKey,
-                peerPublicKey
-              );
+              // Decrypt signal data (unused currently, available for future use)
+              // const decryptedData = decryptMessage(
+              //   signalData.data,
+              //   userPrivateKey,
+              //   peerPublicKey
+              // );
 
               if (signalData.type === 'hangup') {
                 this.cleanup();
