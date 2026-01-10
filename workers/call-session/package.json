@@ -1,0 +1,19 @@
+{
+  "name": "call-session-worker",
+  "version": "1.0.0",
+  "description": "Cloudflare Worker for managing Cloudflare Calls sessions",
+  "main": "src/index.ts",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "test": "vitest"
+  },
+  "dependencies": {
+    "firebase-admin": "^12.0.0"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20231218.0",
+    "wrangler": "^3.22.1",
+    "vitest": "^1.1.0"
+  }
+}
