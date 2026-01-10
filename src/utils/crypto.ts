@@ -172,5 +172,9 @@ export function hashMessage(message: string): string {
   const encoder = new TextEncoder();
   const messageUint8 = new Uint8Array(encoder.encode(message));
   const hash = nacl.hash(messageUint8);
-  return encodeBase64(hash);
+  // Return URL-safe base64 (replace / with _, + with -, remove padding =)
+  return encodeBase64(hash)
+    .replace(/\//g, '_')
+    .replace(/\+/g, '-')
+    .replace(/=+$/, '');
 }
