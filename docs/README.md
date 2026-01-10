@@ -2,6 +2,8 @@
 
 Welcome to the SkypeAlternative documentation! This comprehensive guide will help you understand, build, and contribute to this secure, end-to-end encrypted communication application.
 
+> 📖 **New here?** Check out [How to Access Documentation](HOW_TO_ACCESS_DOCS.md) for guidance on navigating these docs.
+
 ## 📚 Table of Contents
 
 ### Getting Started
