@@ -1,0 +1,44 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+  
+  match /databases/{database}/documents/users/{userId} {
+  allow read, write: if true;
+}
+
+match /databases/{database}/documents/friends/{friendId} {
+  allow read, write: if request.auth != null;
+}
+
+match /databases/{database}/documents/messages/{messageId} {
+  allow read, write: if request.auth != null;
+}
+
+match /databases/{database}/documents/calls/{callId} {
+  allow read, write: if request.auth != null;
+}
+
+match /databases/{database}/documents/file/{fileId} {
+  allow read, write: if request.auth != null;
+}
+
+    match /users/{userid} {
+        // Allow read and write if the request is made by the authenticated user with matching UID
+        allow read: if request.auth != null && request.auth.uid == userid;
+      allow write: if request.auth.token.email == '814327008009-compute@developer.gserviceaccount.com';
+    }
+
+      match /users/{userid}/position {
+          allow write: if request.auth != null && request.auth.uid == userid;
+      }
+
+    match /mazes/{mazeid} {
+      allow read: if request.auth != null;
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
