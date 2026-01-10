@@ -1,12 +1,7 @@
 import {
-  collection,
   doc,
   setDoc,
   getDoc,
-  getDocs,
-  query,
-  where,
-  limit,
   Timestamp,
 } from 'firebase/firestore';
 import { signInAnonymously } from 'firebase/auth';
@@ -199,17 +194,26 @@ class AuthService {
       const firebase = getFirebaseService();
       const db = firebase.getFirestore();
 
-      const usersRef = collection(db, 'users');
-      const q = query(usersRef, where('publicKey', '==', publicKey), limit(1));
-      const querySnapshot = await getDocs(q);
+      // Compute userId from public key hash (same as registration)
+      const userId = hashMessage(publicKey).substring(0, 20);
+      
+      // Use direct document access instead of query to comply with security rules
+      const userRef = doc(db, 'users', userId);
+      const userDoc = await getDoc(userRef);
 
-      if (querySnapshot.empty) {
+      if (!userDoc.exists()) {
         return null;
       }
 
-      const userData = querySnapshot.docs[0].data();
+      const userData = userDoc.data();
+      
+      // Verify the public key matches (in case of hash collision)
+      if (userData.publicKey !== publicKey) {
+        return null;
+      }
+      
       return {
-        id: querySnapshot.docs[0].id,
+        id: userDoc.id,
         publicKey: userData.publicKey,
         username: userData.username,
         createdAt: userData.createdAt.toMillis(),

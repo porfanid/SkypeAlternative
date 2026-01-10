@@ -55,10 +55,11 @@ class MessageService {
         status: 'sending',
       };
 
-      // Store in Firebase
+      // Store in Firebase with encrypted flag for security rules
       const messageRef = doc(db, 'messages', message.id);
       await setDoc(messageRef, {
         ...message,
+        encrypted: true, // Required by security rules
         timestamp: Timestamp.fromMillis(message.timestamp),
       });
 
@@ -66,6 +67,7 @@ class MessageService {
       message.status = 'sent';
       await setDoc(messageRef, {
         ...message,
+        encrypted: true, // Required by security rules
         timestamp: Timestamp.fromMillis(message.timestamp),
       });
 
