@@ -175,6 +175,7 @@ class EnhancedMessageService {
       const messageRef = doc(db, 'messages', message.id);
       await setDoc(messageRef, {
         ...message,
+        encrypted: true, // Required by security rules
         timestamp: Timestamp.now(),
       });
 

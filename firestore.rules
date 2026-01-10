@@ -3,9 +3,12 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     
-    // Users collection - public read, self-write only
+    // Users collection - restricted access to prevent user enumeration
     match /users/{userId} {
-      allow read: if request.auth != null;
+      // Only allow getting a specific user by ID (no listing/querying all users)
+      allow get: if request.auth != null;
+      // Prevent listing all users
+      allow list: if false;
       // Allow create for any authenticated user (including anonymous)
       // Allow update/delete only for the user themselves
       allow create: if request.auth != null;
@@ -34,9 +37,13 @@ service cloud.firestore {
         resource.data.senderId == request.auth.uid || 
         resource.data.recipientId == request.auth.uid
       );
+      // Allow create only if sender and recipient are friends
+      // Check for friendship document in either direction: senderId_recipientId or recipientId_senderId
       allow create: if request.auth != null && 
         request.resource.data.senderId == request.auth.uid &&
-        request.resource.data.encrypted == true;
+        request.resource.data.encrypted == true &&
+        (exists(/databases/$(database)/documents/friends/$(request.auth.uid + '_' + request.resource.data.recipientId)) ||
+         exists(/databases/$(database)/documents/friends/$(request.resource.data.recipientId + '_' + request.auth.uid)));
       allow update: if request.auth != null && 
         resource.data.senderId == request.auth.uid;
       allow delete: if request.auth != null && 

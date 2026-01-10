@@ -3,10 +3,16 @@
  */
 
 import { fileService } from '../../src/services/file';
+import storageService from '../../src/services/storage';
+import * as firestore from 'firebase/firestore';
 
 // Mock Firebase
 jest.mock('../../src/services/firebase', () => ({
-  db: {}
+  getDb: jest.fn(() => ({})),
+  getFirebaseService: jest.fn(() => ({
+    getFirestore: jest.fn(() => ({})),
+    getAuth: jest.fn(() => ({}))
+  }))
 }));
 
 // Mock Firestore
@@ -44,7 +50,7 @@ describe('File Service', () => {
     jest.clearAllMocks();
     
     // Mock storage service
-    jest.spyOn(require('../../src/services/storage').default, 'getItem')
+    jest.spyOn(storageService, 'getItem')
       .mockResolvedValue('user123');
   });
 
@@ -65,10 +71,12 @@ describe('File Service', () => {
     });
 
     it('should reject files exceeding size limit', async () => {
-      const largeContent = new Array(101 * 1024 * 1024).fill('a').join('');
-      const mockFile = new File([largeContent], 'large.txt', {
+      // Mock a file with size property exceeding limit without allocating memory
+      const mockFile = {
+        name: 'large.txt',
+        size: 101 * 1024 * 1024, // 101MB
         type: 'text/plain'
-      });
+      } as File;
 
       await expect(
         fileService.uploadFile(
@@ -145,8 +153,8 @@ describe('File Service', () => {
         encryptedKey: 'encrypted_key'
       };
 
-      const { getDoc } = require('firebase/firestore');
-      getDoc.mockResolvedValue({
+      const getDocMock = firestore.getDoc as jest.Mock;
+      getDocMock.mockResolvedValue({
         exists: () => true,
         data: () => mockMetadata
       });
@@ -158,8 +166,8 @@ describe('File Service', () => {
     });
 
     it('should return null when file does not exist', async () => {
-      const { getDoc } = require('firebase/firestore');
-      getDoc.mockResolvedValue({
+      const getDocMock = firestore.getDoc as jest.Mock;
+      getDocMock.mockResolvedValue({
         exists: () => false
       });
 
@@ -177,8 +185,8 @@ describe('File Service', () => {
         fileName: 'test.txt'
       };
 
-      const { getDoc } = require('firebase/firestore');
-      getDoc.mockResolvedValue({
+      const getDocMock = firestore.getDoc as jest.Mock;
+      getDocMock.mockResolvedValue({
         exists: () => true,
         data: () => mockMetadata
       });

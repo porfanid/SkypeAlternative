@@ -3,10 +3,15 @@
  */
 
 import { callService } from '../../src/services/call';
+import storageService from '../../src/services/storage';
 
 // Mock Firebase
 jest.mock('../../src/services/firebase', () => ({
-  db: {}
+  getDb: jest.fn(() => ({})),
+  getFirebaseService: jest.fn(() => ({
+    getFirestore: jest.fn(() => ({})),
+    getAuth: jest.fn(() => ({}))
+  }))
 }));
 
 // Mock Firestore functions
@@ -79,7 +84,7 @@ describe('Call Service', () => {
       const constraints = { video: true, audio: true };
 
       // Mock storage service
-      jest.spyOn(require('../../src/services/storage').default, 'getItem')
+      jest.spyOn(storageService, 'getItem')
         .mockResolvedValue('initiator123');
 
       const callId = await callService.initiateCall(
@@ -102,7 +107,7 @@ describe('Call Service', () => {
       const initiatorPrivateKey = 'initiator_priv_key';
       const constraints = { video: false, audio: true };
 
-      jest.spyOn(require('../../src/services/storage').default, 'getItem')
+      jest.spyOn(storageService, 'getItem')
         .mockResolvedValue('initiator123');
 
       await callService.initiateCall(
@@ -121,7 +126,7 @@ describe('Call Service', () => {
     it('should throw error when media access is denied', async () => {
       mockGetUserMedia.mockRejectedValue(new Error('Permission denied'));
 
-      jest.spyOn(require('../../src/services/storage').default, 'getItem')
+      jest.spyOn(storageService, 'getItem')
         .mockResolvedValue('initiator123');
 
       await expect(
