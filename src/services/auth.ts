@@ -9,6 +9,7 @@ import {
   limit,
   Timestamp,
 } from 'firebase/firestore';
+import { signInAnonymously } from 'firebase/auth';
 import { getFirebaseService } from './firebase';
 import { signMessage, verifySignature, hashMessage } from '@utils/crypto';
 import { User, AuthChallenge, AuthResponse } from '@models/index';
@@ -63,6 +64,10 @@ class AuthService {
     try {
       const firebase = getFirebaseService();
       const db = firebase.getFirestore();
+      const auth = firebase.getAuth();
+
+      // Sign in anonymously to get Firebase Auth context
+      await signInAnonymously(auth);
 
       // Create user ID from public key hash
       const userId = hashMessage(publicKey).substring(0, 20);
@@ -105,6 +110,10 @@ class AuthService {
     try {
       const firebase = getFirebaseService();
       const db = firebase.getFirestore();
+      const auth = firebase.getAuth();
+
+      // Sign in anonymously to get Firebase Auth context
+      await signInAnonymously(auth);
 
       // Generate challenge
       const challenge = this.generateChallenge();

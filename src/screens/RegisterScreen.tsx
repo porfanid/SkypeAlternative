@@ -18,6 +18,7 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ onRegister, onBackToLog
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [mnemonicConfirmed, setMnemonicConfirmed] = useState(false);
+  const [copySuccess, setCopySuccess] = useState(false);
 
   const handleGenerateMnemonic = () => {
     const newMnemonic = generateMnemonic();
@@ -25,6 +26,17 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ onRegister, onBackToLog
     setMnemonicGenerated(true);
     setShowMnemonic(true);
     setError('');
+    setCopySuccess(false);
+  };
+
+  const handleCopyMnemonic = async () => {
+    try {
+      await navigator.clipboard.writeText(mnemonic);
+      setCopySuccess(true);
+      setTimeout(() => setCopySuccess(false), 2000);
+    } catch (err) {
+      setError('Failed to copy to clipboard');
+    }
   };
 
   const handleRegister = async () => {
@@ -120,12 +132,21 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ onRegister, onBackToLog
                   </div>
                 )}
               </div>
-              <button
-                className="button secondary"
-                onClick={() => setShowMnemonic(!showMnemonic)}
-              >
-                {showMnemonic ? 'Hide' : 'Show'} Recovery Phrase
-              </button>
+              <div className="button-group">
+                <button
+                  className="button secondary"
+                  onClick={() => setShowMnemonic(!showMnemonic)}
+                >
+                  {showMnemonic ? 'Hide' : 'Show'} Recovery Phrase
+                </button>
+                <button
+                  className="button secondary"
+                  onClick={handleCopyMnemonic}
+                  disabled={!showMnemonic}
+                >
+                  {copySuccess ? '✓ Copied!' : '📋 Copy'}
+                </button>
+              </div>
             </div>
 
             <div className="warning-box">
