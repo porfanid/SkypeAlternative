@@ -127,11 +127,12 @@ class CallService {
       }
 
       const encryptedSession = sessionSnapshot.data();
-      const decryptedSession = decryptMessage(
-        encryptedSession.data,
-        recipientPrivateKey,
-        initiatorPublicKey
-      );
+      // Decrypt session data for potential future use
+      // const decryptedSession = decryptMessage(
+      //   encryptedSession.data,
+      //   recipientPrivateKey,
+      //   initiatorPublicKey
+      // );
       // Parse session data (currently unused, but available for future use)
       // const sessionData = JSON.parse(decryptedSession);
 
@@ -316,8 +317,8 @@ class CallService {
   private listenForSignals(
     callId: string,
     userId: string,
-    userPrivateKey: string,
-    peerPublicKey: string
+    _userPrivateKey: string,
+    _peerPublicKey: string
   ): void {
     const signalsRef = collection(getDb(), 'calls', callId, 'signals');
     
