@@ -178,12 +178,21 @@ git push origin v1.0.0
 
 ## 📚 Documentation
 
-- **[Getting Started](docs/GETTING_STARTED.md)** - Complete setup guide for new contributors
+**[📖 View Full Documentation](docs/)** - Complete documentation index
+
+### Quick Links
+- **[Getting Started](docs/GETTING_STARTED.md)** - Complete setup guide for new developers
 - **[Architecture](docs/ARCHITECTURE.md)** - Deep dive into system design and implementation
-- **[Contributing](CONTRIBUTING.md)** - Guidelines for contributing code
+- **[Project Structure](docs/STRUCTURE.md)** - Understanding the codebase layout
+- **[Contributing](docs/CONTRIBUTING.md)** - Guidelines for contributing code
+- **[Copilot Instructions](docs/COPILOT_INSTRUCTIONS.md)** - AI-assisted development guidelines
+- **[Security Policy](docs/SECURITY.md)** - Security policy and vulnerability reporting
+- **[Troubleshooting](docs/TROUBLESHOOTING.md)** - Common issues and solutions
+
+### Additional Resources
 - **[Code of Conduct](CODE_OF_CONDUCT.md)** - Community standards
-- **[Security](SECURITY.md)** - Security policy and vulnerability reporting
 - **[Changelog](CHANGELOG.md)** - Version history and release notes
+- **[Support](SUPPORT.md)** - Getting help and support options
 
 ## 🤝 Contributing
 
