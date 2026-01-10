@@ -10,7 +10,7 @@
 
 import { getDb } from './firebase';
 import { collection, doc, setDoc, getDoc, updateDoc, onSnapshot, Timestamp } from 'firebase/firestore';
-import { encryptMessage, decryptMessage } from '../utils/crypto';
+import { encryptMessage } from '../utils/crypto';
 import { cloudflareCallsService } from './cloudflareCall';
 import { CallSignalData } from '../models';
 
@@ -126,14 +126,14 @@ class CallService {
         throw new Error('Cloudflare session not found');
       }
 
-      const encryptedSession = sessionSnapshot.data();
-      // Decrypt session data for potential future use
+      // Session data is encrypted but not needed for current implementation
+      // Future enhancement: decrypt and use session data for advanced SFU features
+      // const encryptedSession = sessionSnapshot.data();
       // const decryptedSession = decryptMessage(
       //   encryptedSession.data,
       //   recipientPrivateKey,
       //   initiatorPublicKey
       // );
-      // Parse session data (currently unused, but available for future use)
       // const sessionData = JSON.parse(decryptedSession);
 
       // Request own session credentials
