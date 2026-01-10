@@ -1,0 +1,43 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Files stored per user
+    match /files/{userId}/{fileId} {
+      // Allow read if authenticated user is the owner or in the recipients list
+      allow read: if request.auth != null && (
+        request.auth.uid == userId || 
+        request.auth.uid in resource.metadata.recipients
+      );
+      
+      // Allow write if authenticated user is the owner and file size <= 100MB
+      allow write: if request.auth != null && 
+        request.auth.uid == userId &&
+        request.resource.size <= 104857600;
+      
+      // Allow delete if authenticated user is the owner
+      allow delete: if request.auth != null && 
+        request.auth.uid == userId;
+    }
+    
+    // Thumbnails stored per user
+    match /thumbnails/{userId}/{fileId} {
+      allow read: if request.auth != null && (
+        request.auth.uid == userId || 
+        request.auth.uid in resource.metadata.recipients
+      );
+      
+      allow write: if request.auth != null && 
+        request.auth.uid == userId &&
+        request.resource.size <= 1048576; // 1MB limit for thumbnails
+      
+      allow delete: if request.auth != null && 
+        request.auth.uid == userId;
+    }
+    
+    // Default deny all other paths
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

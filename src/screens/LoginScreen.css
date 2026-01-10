@@ -1,0 +1,139 @@
+.login-screen {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0e1621 0%, #1a2332 100%);
+  padding: 20px;
+}
+
+.login-container {
+  width: 100%;
+  max-width: 450px;
+  background-color: #1a2332;
+  border-radius: 12px;
+  padding: 40px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.logo {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.logo-icon {
+  font-size: 48px;
+  margin-bottom: 15px;
+}
+
+.logo h1 {
+  font-size: 28px;
+  margin: 0;
+  background: linear-gradient(135deg, #00aff4 0%, #0099d6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.tagline {
+  text-align: center;
+  color: #888;
+  font-size: 13px;
+  margin-bottom: 35px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #ccc;
+}
+
+.input-wrapper {
+  position: relative;
+}
+
+.mnemonic-input {
+  resize: none;
+  font-size: 13px;
+}
+
+.input-helper {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 5px;
+}
+
+.text-button {
+  background: none;
+  border: none;
+  color: #00aff4;
+  font-size: 12px;
+  cursor: pointer;
+  padding: 4px 8px;
+  transition: color 0.2s;
+}
+
+.text-button:hover {
+  color: #0099d6;
+}
+
+.login-button {
+  width: 100%;
+  margin-top: 10px;
+  padding: 14px;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  margin: 25px 0;
+  color: #666;
+  font-size: 13px;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background-color: #2a3a4a;
+}
+
+.divider span {
+  padding: 0 15px;
+}
+
+.login-container .button.secondary {
+  width: 100%;
+}
+
+.info-box {
+  margin-top: 30px;
+  padding: 15px;
+  background-color: rgba(0, 175, 244, 0.05);
+  border-left: 3px solid #00aff4;
+  border-radius: 4px;
+}
+
+.info-box p {
+  font-size: 12px;
+  color: #999;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.info-box p:first-child {
+  margin-bottom: 8px;
+}
+
+.info-box strong {
+  color: #00aff4;
+}
