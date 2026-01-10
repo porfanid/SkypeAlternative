@@ -1,16 +1,26 @@
 /**
- * Tests for Call Service
+ * Tests for Call Service with Cloudflare SFU
  */
 
 import { callService } from '../../src/services/call';
 import storageService from '../../src/services/storage';
+import { cloudflareCallsService } from '../../src/services/cloudflareCall';
 
 // Mock Firebase
 jest.mock('../../src/services/firebase', () => ({
   getDb: jest.fn(() => ({})),
   getFirebaseService: jest.fn(() => ({
     getFirestore: jest.fn(() => ({})),
-    getAuth: jest.fn(() => ({}))
+    getAuth: jest.fn(() => ({
+      currentUser: {
+        getIdToken: jest.fn().mockResolvedValue('mock-id-token')
+      }
+    }))
+  })),
+  getAuthInstance: jest.fn(() => ({
+    currentUser: {
+      getIdToken: jest.fn().mockResolvedValue('mock-id-token')
+    }
   }))
 }));
 
@@ -24,7 +34,8 @@ jest.mock('firebase/firestore', () => ({
   onSnapshot: jest.fn(),
   deleteDoc: jest.fn(),
   Timestamp: {
-    now: jest.fn(() => ({ toMillis: () => Date.now() }))
+    now: jest.fn(() => ({ toMillis: () => Date.now() })),
+    fromMillis: jest.fn((ms) => ({ toMillis: () => ms }))
   }
 }));
 
@@ -32,6 +43,30 @@ jest.mock('firebase/firestore', () => ({
 jest.mock('../../src/utils/crypto', () => ({
   encryptMessage: jest.fn((msg) => `encrypted_${msg}`),
   decryptMessage: jest.fn((msg) => msg.replace('encrypted_', ''))
+}));
+
+// Mock Cloudflare Calls Service
+jest.mock('../../src/services/cloudflareCall', () => ({
+  cloudflareCallsService: {
+    requestSessionCredentials: jest.fn().mockResolvedValue({
+      sessionId: 'mock-session-id',
+      tracks: {
+        trackName: 'mock-track',
+        location: 'wss://mock.cloudflare.com',
+        sessionDescription: {
+          type: 'offer',
+          sdp: 'mock-sdp'
+        }
+      },
+      iceServers: [{ urls: 'stun:stun.cloudflare.com:3478' }]
+    }),
+    publishTrack: jest.fn().mockResolvedValue(undefined),
+    subscribeToTrack: jest.fn().mockResolvedValue(new MediaStream()),
+    getLocalStream: jest.fn(() => null),
+    getRemoteStream: jest.fn(() => null),
+    getCurrentSessionId: jest.fn(() => 'mock-session-id'),
+    cleanup: jest.fn()
+  }
 }));
 
 // Mock navigator.mediaDevices
@@ -43,23 +78,7 @@ Object.defineProperty(global.navigator, 'mediaDevices', {
   writable: true
 });
 
-// Mock RTCPeerConnection
-global.RTCPeerConnection = jest.fn().mockImplementation(() => ({
-  createOffer: jest.fn().mockResolvedValue({ type: 'offer', sdp: 'mock-offer-sdp' }),
-  createAnswer: jest.fn().mockResolvedValue({ type: 'answer', sdp: 'mock-answer-sdp' }),
-  setLocalDescription: jest.fn().mockResolvedValue(undefined),
-  setRemoteDescription: jest.fn().mockResolvedValue(undefined),
-  addIceCandidate: jest.fn().mockResolvedValue(undefined),
-  addTrack: jest.fn(),
-  close: jest.fn(),
-  onicecandidate: null,
-  ontrack: null
-})) as any;
-
-global.RTCSessionDescription = jest.fn().mockImplementation((desc) => desc) as any;
-global.RTCIceCandidate = jest.fn().mockImplementation((cand) => cand) as any;
-
-describe('Call Service', () => {
+describe('Call Service with Cloudflare SFU', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     
@@ -77,7 +96,7 @@ describe('Call Service', () => {
   });
 
   describe('initiateCall', () => {
-    it('should initiate a call with video and audio', async () => {
+    it('should initiate a call with Cloudflare SFU', async () => {
       const recipientId = 'recipient123';
       const recipientPublicKey = 'recipient_pub_key';
       const initiatorPrivateKey = 'initiator_priv_key';
@@ -99,6 +118,8 @@ describe('Call Service', () => {
         video: true,
         audio: true
       });
+      expect(cloudflareCallsService.requestSessionCredentials).toHaveBeenCalledWith('initiator123');
+      expect(cloudflareCallsService.publishTrack).toHaveBeenCalled();
     });
 
     it('should initiate an audio-only call', async () => {
@@ -121,6 +142,7 @@ describe('Call Service', () => {
         video: false,
         audio: true
       });
+      expect(cloudflareCallsService.requestSessionCredentials).toHaveBeenCalled();
     });
 
     it('should throw error when media access is denied', async () => {
@@ -132,6 +154,19 @@ describe('Call Service', () => {
       await expect(
         callService.initiateCall('recipient123', 'pub_key', 'priv_key', { video: true, audio: true })
       ).rejects.toThrow('Failed to initiate call');
+    });
+
+    it('should cleanup on failure', async () => {
+      mockGetUserMedia.mockRejectedValue(new Error('Permission denied'));
+
+      jest.spyOn(storageService, 'getItem')
+        .mockResolvedValue('initiator123');
+
+      await expect(
+        callService.initiateCall('recipient123', 'pub_key', 'priv_key', { video: true, audio: true })
+      ).rejects.toThrow();
+
+      expect(cloudflareCallsService.cleanup).toHaveBeenCalled();
     });
   });
 
@@ -224,21 +259,13 @@ describe('Call Service', () => {
   });
 
   describe('getRemoteStream', () => {
-    it('should return remote stream when available', () => {
-      const mockStream = { id: 'remote-stream' };
-      (callService as any).remoteStream = mockStream;
+    it('should return remote stream from Cloudflare service', () => {
+      const mockStream = new MediaStream();
+      (cloudflareCallsService.getRemoteStream as jest.Mock).mockReturnValue(mockStream);
 
       const stream = callService.getRemoteStream();
 
       expect(stream).toBe(mockStream);
-    });
-
-    it('should return null when no remote stream', () => {
-      (callService as any).remoteStream = null;
-
-      const stream = callService.getRemoteStream();
-
-      expect(stream).toBeNull();
     });
   });
 });

@@ -96,3 +96,29 @@ export interface AuthResponse {
   signature: string;
   publicKey: string;
 }
+
+// Cloudflare Calls Types
+export interface CloudflareSessionCredentials {
+  sessionId: string;
+  tracks: {
+    trackName: string;
+    location: string;
+    sessionDescription: RTCSessionDescriptionInit;
+  };
+  iceServers: RTCIceServer[];
+}
+
+export interface CloudflareTrack {
+  trackName: string;
+  sessionId: string;
+  kind: 'audio' | 'video' | 'audio-video';
+}
+
+export interface CallSignalData {
+  type: 'cloudflare-session' | 'hangup';
+  sessionId?: string;
+  trackName?: string;
+  from: string;
+  to: string;
+  timestamp: number;
+}
