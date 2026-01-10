@@ -2,41 +2,99 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-  
-  match /databases/{database}/documents/users/{userId} {
-  allow read, write: if true;
-}
-
-match /databases/{database}/documents/friends/{friendId} {
-  allow read, write: if request.auth != null;
-}
-
-match /databases/{database}/documents/messages/{messageId} {
-  allow read, write: if request.auth != null;
-}
-
-match /databases/{database}/documents/calls/{callId} {
-  allow read, write: if request.auth != null;
-}
-
-match /databases/{database}/documents/file/{fileId} {
-  allow read, write: if request.auth != null;
-}
-
-    match /users/{userid} {
-        // Allow read and write if the request is made by the authenticated user with matching UID
-        allow read: if request.auth != null && request.auth.uid == userid;
-      allow write: if request.auth.token.email == '814327008009-compute@developer.gserviceaccount.com';
-    }
-
-      match /users/{userid}/position {
-          allow write: if request.auth != null && request.auth.uid == userid;
-      }
-
-    match /mazes/{mazeid} {
+    
+    // Users collection - public read, self-write only
+    match /users/{userId} {
       allow read: if request.auth != null;
+      allow write: if request.auth != null && request.auth.uid == userId;
     }
-
+    
+    // Friends collection - friend-validated read/write
+    match /friends/{friendshipId} {
+      allow read: if request.auth != null && (
+        resource.data.userId == request.auth.uid || 
+        resource.data.friendId == request.auth.uid
+      );
+      allow create: if request.auth != null && (
+        request.resource.data.userId == request.auth.uid ||
+        request.resource.data.friendId == request.auth.uid
+      );
+      allow update, delete: if request.auth != null && (
+        resource.data.userId == request.auth.uid || 
+        resource.data.friendId == request.auth.uid
+      );
+    }
+    
+    // Messages collection - friend-only access with encryption verification
+    match /messages/{messageId} {
+      allow read: if request.auth != null && (
+        resource.data.senderId == request.auth.uid || 
+        resource.data.recipientId == request.auth.uid
+      );
+      allow create: if request.auth != null && 
+        request.resource.data.senderId == request.auth.uid &&
+        request.resource.data.encrypted == true;
+      allow update: if request.auth != null && 
+        resource.data.senderId == request.auth.uid;
+      allow delete: if request.auth != null && 
+        resource.data.senderId == request.auth.uid;
+    }
+    
+    // Group messages collection - group member access only
+    match /groupMessages/{messageId} {
+      allow read: if request.auth != null && 
+        request.auth.uid in resource.data.groupMembers;
+      allow create: if request.auth != null && 
+        request.resource.data.senderId == request.auth.uid &&
+        request.auth.uid in request.resource.data.groupMembers;
+      allow update, delete: if request.auth != null && 
+        resource.data.senderId == request.auth.uid;
+    }
+    
+    // Calls collection - participant-only access
+    match /calls/{callId} {
+      allow read: if request.auth != null && (
+        resource.data.initiatorId == request.auth.uid || 
+        resource.data.recipientId == request.auth.uid
+      );
+      allow create: if request.auth != null && 
+        request.resource.data.initiatorId == request.auth.uid;
+      allow update: if request.auth != null && (
+        resource.data.initiatorId == request.auth.uid || 
+        resource.data.recipientId == request.auth.uid
+      );
+      allow delete: if request.auth != null && 
+        resource.data.initiatorId == request.auth.uid;
+    }
+    
+    // Call signals collection - participant-only access
+    match /callSignals/{signalId} {
+      allow read: if request.auth != null && (
+        resource.data.from == request.auth.uid || 
+        resource.data.to == request.auth.uid
+      );
+      allow create: if request.auth != null && 
+        request.resource.data.from == request.auth.uid;
+      allow delete: if request.auth != null && 
+        resource.data.from == request.auth.uid;
+    }
+    
+    // Files collection - sender/recipient only with size limit
+    match /files/{fileId} {
+      allow read: if request.auth != null && (
+        resource.data.senderId == request.auth.uid || 
+        resource.data.recipientId == request.auth.uid
+      );
+      allow create: if request.auth != null && 
+        request.resource.data.senderId == request.auth.uid &&
+        request.resource.data.fileSize <= 104857600; // 100MB limit
+      allow update: if request.auth != null && 
+        resource.data.senderId == request.auth.uid;
+      allow delete: if request.auth != null && 
+        resource.data.senderId == request.auth.uid;
+    }
+    
+    // Default deny all other collections
     match /{document=**} {
       allow read, write: if false;
     }

@@ -55,7 +55,7 @@ class NotificationService {
   /**
    * Show incoming call notification
    */
-  async showIncomingCallNotification(callerName: string, onAnswer: () => void, onReject: () => void): Promise<void> {
+  async showIncomingCallNotification(callerName: string, _onAnswer: () => void, _onReject: () => void): Promise<void> {
     await this.showNotification('Incoming Call', {
       body: `${callerName} is calling you...`,
       tag: 'incoming-call',

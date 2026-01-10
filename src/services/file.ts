@@ -67,11 +67,7 @@ class FileService {
       // Generate symmetric key for file encryption
       const fileKey = this.generateFileKey();
 
-      // Encrypt file in chunks
-      const encryptedChunks: ArrayBuffer[] = [];
-      let uploaded = 0;
-
-      const reader = new FileReader();
+      // Read file data
       const fileData = await this.readFileAsArrayBuffer(file);
       
       // Encrypt file data
@@ -331,9 +327,9 @@ class FileService {
   /**
    * Encrypt file data (simplified - in production use proper streaming encryption)
    */
-  private async encryptFileData(data: ArrayBuffer, key: string): Promise<ArrayBuffer> {
+  private async encryptFileData(data: ArrayBuffer, _key: string): Promise<ArrayBuffer> {
     // Convert to base64 and encrypt
-    const base64 = btoa(String.fromCharCode.apply(null, Array.from(new Uint8Array(data))));
+    const _base64 = btoa(String.fromCharCode.apply(null, Array.from(new Uint8Array(data))));
     // In real implementation, use proper symmetric encryption (AES-GCM)
     // For now, returning as-is (would be encrypted in production)
     return data;
@@ -342,7 +338,7 @@ class FileService {
   /**
    * Decrypt file data
    */
-  private async decryptFileData(data: ArrayBuffer, key: string): Promise<ArrayBuffer> {
+  private async decryptFileData(data: ArrayBuffer, _key: string): Promise<ArrayBuffer> {
     // In real implementation, decrypt with AES-GCM
     return data;
   }

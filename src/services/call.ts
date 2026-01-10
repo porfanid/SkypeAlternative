@@ -9,7 +9,7 @@
  */
 
 import { getDb } from './firebase';
-import { collection, doc, setDoc, getDoc, updateDoc, onSnapshot, deleteDoc, Timestamp } from 'firebase/firestore';
+import { collection, doc, setDoc, getDoc, updateDoc, onSnapshot, Timestamp } from 'firebase/firestore';
 import { encryptMessage, decryptMessage } from '../utils/crypto';
 
 export interface CallState {

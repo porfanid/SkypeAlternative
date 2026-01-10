@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { callService, CallState } from '../services/call';
+import { callService } from '../services/call';
 import './CallScreen.css';
 
 interface CallScreenProps {

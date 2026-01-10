@@ -61,7 +61,7 @@ const MainApp: React.FC<MainAppProps> = ({ user, onLogout }) => {
     };
   }, [user.id]);
 
-  const handleStartCall = (friend: Friend, videoEnabled: boolean) => {
+  const handleStartCall = (friend: Friend, _videoEnabled: boolean) => {
     setCallData({
       callId: `call_${Date.now()}`,
       isInitiator: true,
