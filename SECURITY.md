@@ -120,9 +120,11 @@ We provide security updates for the following versions:
 
 **Firebase Security Rules:**
 - User data accessible only by owner
+- User enumeration prevented (no listing all users)
 - Friend requests verified
-- Message access restricted
-- Public keys are public (by design)
+- Messages require friendship verification
+- Message access restricted to sender/recipient only
+- Public keys discoverable only by direct lookup
 
 ### Application Security
 
@@ -143,6 +145,32 @@ We provide security updates for the following versions:
 - Node integration disabled (renderer)
 - Remote module disabled
 - Secure IPC bridge (preload script)
+
+## Production Deployment Recommendations
+
+For production deployments, consider these additional security measures:
+
+**Firebase App Check:**
+- Enable Firebase App Check to prevent unauthorized access
+- Protects against abusive traffic and bot accounts
+- Supports reCAPTCHA, DeviceCheck (iOS), and SafetyNet (Android)
+
+**Rate Limiting:**
+- Implement rate limiting on friend requests
+- Throttle message sending to prevent spam
+- Use Firebase Extensions for rate limiting
+
+**Authentication Enhancements:**
+- Consider adding email verification for account recovery
+- Implement CAPTCHA for registration
+- Add device fingerprinting to detect suspicious activity
+- Monitor for unusual account creation patterns
+
+**Monitoring:**
+- Set up Firebase Security Rules logging
+- Monitor failed authentication attempts
+- Track unusual access patterns
+- Set up alerts for security events
 
 ## Best Practices for Users
 
@@ -203,26 +231,34 @@ We plan to conduct regular security audits as the project matures.
 
 **Current Version (1.0.x):**
 
-1. **No Message Deletion**:
+1. **Anonymous Authentication**:
+   - Uses Firebase anonymous authentication for simplicity
+   - No email verification or CAPTCHA
+   - Potential for bot account creation
+   - Mitigated by friendship requirement for messaging
+   - Rate limiting recommended for production (see Firebase App Check)
+   - Consider implementing additional verification for production deployments
+
+2. **No Message Deletion**:
    - "Delete" is client-side only
    - Recipients retain copies
    - Firebase still has encrypted data
 
-2. **No Perfect Forward Secrecy**:
+3. **No Perfect Forward Secrecy**:
    - Key compromise exposes past messages
    - Ratcheting planned for v2.0
 
-3. **No Multi-Device Sync**:
+4. **No Multi-Device Sync**:
    - Mnemonic must be entered on each device
    - Messages don't sync between devices
    - Planned for future version
 
-4. **Metadata Exposure**:
+5. **Metadata Exposure**:
    - Firebase sees: who talks to whom, when
    - Message content is encrypted
    - Metadata protection planned (v3.0)
 
-5. **No Certificate Pinning**:
+6. **No Certificate Pinning**:
    - Relies on system trust store
    - Vulnerable to MITM with compromised CA
    - Pinning planned for v1.1
