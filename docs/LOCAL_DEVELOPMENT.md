@@ -4,8 +4,8 @@ This directory contains the Jekyll-based documentation for SkypeAlternative.
 
 ## Prerequisites
 
-- Ruby 2.7 or higher
-- Bundler gem
+- **Ruby 2.7 or higher** - [Installation instructions](#ruby-not-installed)
+- **Bundler gem** - Install with `gem install bundler`
 
 ## Quick Start
 
@@ -15,9 +15,9 @@ This directory contains the Jekyll-based documentation for SkypeAlternative.
 npm run docs:install
 ```
 
-This will:
-- Install Bundler if not already installed
-- Install all Ruby gems required for Jekyll
+This will install all Ruby gems required for Jekyll, including the `github-pages` gem that matches GitHub Pages' environment exactly.
+
+**Note**: If you get permission errors, see [Troubleshooting](#permission-errors).
 
 ### 2. Run Documentation Server
 
@@ -63,22 +63,44 @@ brew install ruby
 
 **Ubuntu/Debian:**
 ```bash
-sudo apt-get install ruby-full
+sudo apt-get install ruby-full build-essential
 ```
 
 **Windows:**
-Download from [rubyinstaller.org](https://rubyinstaller.org/)
+Download and install from [rubyinstaller.org](https://rubyinstaller.org/)
+- Choose Ruby+Devkit version
+- During installation, select "Add Ruby executables to your PATH"
 
 ### Bundler Not Installed
+
+After installing Ruby, install Bundler:
 
 ```bash
 gem install bundler
 ```
 
+### Dependency Conflicts
+
+If you see dependency conflict errors, try:
+
+```bash
+cd docs
+rm Gemfile.lock
+bundle install
+```
+
+The Gemfile uses the `github-pages` gem which ensures all dependencies match GitHub Pages exactly.
+
 ### Port 4000 Already in Use
 
 ```bash
+cd docs
 bundle exec jekyll serve --port 4001
+```
+
+Or use npm script:
+```bash
+npm run docs -- --port 4001
 ```
 
 ### Permission Errors
@@ -86,14 +108,32 @@ bundle exec jekyll serve --port 4001
 On macOS/Linux, you may need to install gems to a user directory:
 
 ```bash
-bundle install --path vendor/bundle
+cd docs
+bundle config set --local path 'vendor/bundle'
+bundle install
 ```
+
+Or install Ruby via a version manager like [rbenv](https://github.com/rbenv/rbenv) or [RVM](https://rvm.io/).
+
+### Command Not Found: bundle
+
+Make sure Ruby's bin directory is in your PATH:
+
+**macOS/Linux:**
+```bash
+echo 'export PATH="$HOME/.gem/ruby/X.X.0/bin:$PATH"' >> ~/.bashrc
+source ~/.bashrc
+```
+Replace `X.X.0` with your Ruby version.
+
+**Windows:**
+The RubyInstaller should add Ruby to PATH automatically. If not, add `C:\Ruby32-x64\bin` to your system PATH.
 
 ## Documentation Structure
 
 ```
 docs/
-├── Gemfile              # Ruby dependencies
+├── Gemfile              # Ruby dependencies (github-pages gem)
 ├── _config.yml          # Jekyll configuration
 ├── index.md             # Landing page
 ├── README.md            # Main documentation index
@@ -113,4 +153,4 @@ When you push changes to the `main` branch, GitHub Actions will automatically bu
 
 https://porfanid.github.io/SkypeAlternative/
 
-The local preview should match the live site exactly.
+The local preview uses the same `github-pages` gem as GitHub Actions, so it will match the live site exactly.
