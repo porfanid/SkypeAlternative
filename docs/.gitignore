@@ -1,0 +1,15 @@
+# Ignore Jekyll build artifacts
+_site/
+.sass-cache/
+.jekyll-cache/
+.jekyll-metadata
+
+# Ignore bundler config and installed gems
+.bundle/
+vendor/
+
+# Ignore Gemfile.lock (it will be generated)
+Gemfile.lock
+
+# Ignore local bundler configuration
+.bundle/config

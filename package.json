@@ -19,7 +19,10 @@
     "lint": "eslint . --ext .ts,.tsx",
     "lint:fix": "eslint . --ext .ts,.tsx --fix",
     "type-check": "tsc --noEmit",
-    "prepare": "husky"
+    "prepare": "husky",
+    "docs:install": "cd docs && bundle config set --local path 'vendor/bundle' && bundle install",
+    "docs": "cd docs && bundle exec jekyll serve --livereload --incremental",
+    "docs:build": "cd docs && bundle exec jekyll build"
   },
   "keywords": [
     "secure-chat",
