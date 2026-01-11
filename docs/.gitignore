@@ -10,3 +10,6 @@ vendor/
 
 # Ignore Gemfile.lock (it will be generated)
 Gemfile.lock
+
+# Ignore local bundler configuration
+.bundle/config

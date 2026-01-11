@@ -15,9 +15,11 @@ This directory contains the Jekyll-based documentation for SkypeAlternative.
 npm run docs:install
 ```
 
-This will install all Ruby gems required for Jekyll, including the `github-pages` gem that matches GitHub Pages' environment exactly.
+This will:
+- Configure bundler to install gems to `docs/vendor/bundle` (no sudo required)
+- Install all Ruby gems required for Jekyll, including the `github-pages` gem that matches GitHub Pages' environment exactly
 
-**Note**: If you get permission errors, see [Troubleshooting](#permission-errors).
+**Note**: Gems are installed locally in the `docs/vendor/bundle` directory to avoid permission issues. This directory is already excluded via `.gitignore`.
 
 ### 2. Run Documentation Server
 
@@ -39,8 +41,9 @@ Press `Ctrl+C` in the terminal to stop the Jekyll server.
 If you prefer to run commands manually:
 
 ```bash
-# Install dependencies
+# Install dependencies (configure bundler first to avoid permission issues)
 cd docs
+bundle config set --local path 'vendor/bundle'
 bundle install
 
 # Run the server
@@ -105,7 +108,9 @@ npm run docs -- --port 4001
 
 ### Permission Errors
 
-On macOS/Linux, you may need to install gems to a user directory:
+The npm script `npm run docs:install` automatically configures bundler to install gems locally in `docs/vendor/bundle`, which should prevent permission errors.
+
+If you still encounter permission issues when running commands manually, ensure bundler is configured correctly:
 
 ```bash
 cd docs
@@ -113,7 +118,21 @@ bundle config set --local path 'vendor/bundle'
 bundle install
 ```
 
-Or install Ruby via a version manager like [rbenv](https://github.com/rbenv/rbenv) or [RVM](https://rvm.io/).
+**Alternative solutions:**
+
+1. **Use a Ruby version manager** (recommended for development):
+   - [rbenv](https://github.com/rbenv/rbenv) - macOS/Linux
+   - [RVM](https://rvm.io/) - macOS/Linux  
+   - [uru](https://bitbucket.org/jonforums/uru) - Windows
+
+2. **Install Ruby to user directory** (if using system Ruby):
+   ```bash
+   # Add to ~/.bashrc or ~/.zshrc
+   export GEM_HOME="$HOME/.gem"
+   export PATH="$HOME/.gem/bin:$PATH"
+   ```
+
+**DO NOT use `sudo bundle install`** - this can cause ownership and permission issues.
 
 ### Command Not Found: bundle
 
