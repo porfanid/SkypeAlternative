@@ -189,6 +189,20 @@ git push origin v1.0.0
 - **[Security Policy](docs/SECURITY.md)** - Security policy and vulnerability reporting
 - **[Troubleshooting](docs/TROUBLESHOOTING.md)** - Common issues and solutions
 
+### Running Documentation Locally
+
+Preview the documentation site locally before pushing changes:
+
+```bash
+# Install Jekyll dependencies (first time only)
+npm run docs:install
+
+# Run documentation server at http://localhost:4000
+npm run docs
+```
+
+See [docs/LOCAL_DEVELOPMENT.md](docs/LOCAL_DEVELOPMENT.md) for detailed instructions.
+
 ### Additional Resources
 - **[Code of Conduct](CODE_OF_CONDUCT.md)** - Community standards
 - **[Changelog](CHANGELOG.md)** - Version history and release notes
